@@ -1,0 +1,382 @@
+/*
+SELECT 'DROP TABLE '||table_name||' CASCADE CONSTRAINTS;' FROM user_tables;
+
+DROP TABLE TIPO_USUARIO CASCADE CONSTRAINTS;
+DROP TABLE TRABAJADOR CASCADE CONSTRAINTS;
+DROP TABLE USUARIO CASCADE CONSTRAINTS;
+DROP TABLE CALENDARIO_MINUTA CASCADE CONSTRAINTS;
+DROP TABLE CLIENTE CASCADE CONSTRAINTS;
+DROP TABLE COMEDOR CASCADE CONSTRAINTS;
+DROP TABLE DETALLE_MINUTA CASCADE CONSTRAINTS;
+DROP TABLE EMPLEADO CASCADE CONSTRAINTS;
+DROP TABLE EMPRESA CASCADE CONSTRAINTS;
+DROP TABLE ESTADO_HABITACION CASCADE CONSTRAINTS;
+DROP TABLE FACTURA CASCADE CONSTRAINTS;
+DROP TABLE FAMILIA CASCADE CONSTRAINTS;
+DROP TABLE HABITACION CASCADE CONSTRAINTS;
+DROP TABLE HUESPED CASCADE CONSTRAINTS;
+DROP TABLE MINUTA CASCADE CONSTRAINTS;
+DROP TABLE ORDEN_DE_COMPRA CASCADE CONSTRAINTS;
+DROP TABLE ORDEN_DE_PEDIDO CASCADE CONSTRAINTS;
+DROP TABLE PRODUCTO CASCADE CONSTRAINTS;
+DROP TABLE PROVEEDOR CASCADE CONSTRAINTS;
+DROP TABLE RUBRO CASCADE CONSTRAINTS;
+DROP TABLE STOCK CASCADE CONSTRAINTS;
+DROP TABLE TIPO_HABITACION CASCADE CONSTRAINTS;
+DROP TABLE TIPO_PRODUCTO CASCADE CONSTRAINTS;
+DROP TABLE TIPO_SERVICIO CASCADE CONSTRAINTS;
+*/
+
+
+
+CREATE TABLE calendario_minuta (
+    id_calendario      NUMBER(10) NOT NULL,
+    fecha_inicio       DATE NOT NULL,
+    fecha_fin          DATE NOT NULL,
+    id_minuta   NUMBER(10) NOT NULL
+);
+
+ALTER TABLE calendario_minuta ADD CONSTRAINT calendario_minuta_pk PRIMARY KEY ( 
+id_calendario );
+
+CREATE TABLE cliente (
+    id_cliente           NUMBER(10) NOT NULL,
+    rut_empresa          VARCHAR2(15) NOT NULL,
+    nombre_cliente       VARCHAR2(15) NOT NULL,
+    telefono_cliente     VARCHAR2(10) NOT NULL,
+    correo_cliente       VARCHAR2(30) NOT NULL,
+    usuario_cliente      VARCHAR2(15) NOT NULL,
+    contrasena_cliente   VARCHAR2(20) NOT NULL,
+    id_usuario   	 NUMBER(10)    NOT NULL,
+    perfil_cliente       NUMBER(10) NOT NULL
+);
+
+CREATE UNIQUE INDEX cliente__idx ON
+    cliente ( id_usuario ASC );
+
+
+ALTER TABLE cliente ADD CONSTRAINT cliente_pk PRIMARY KEY ( id_cliente );
+
+CREATE TABLE comedor (
+    id_comedor                  number(10) NOT NULL,
+    nombre                      varchar2(20) NOT NULL,
+    id_servicio   number(10) NOT NULL,
+    id_orden    number(10) NOT NULL
+);
+
+ALTER TABLE comedor ADD CONSTRAINT comedor_pk PRIMARY KEY ( id_comedor );
+
+CREATE TABLE detalle_minuta (
+    id_detalle         NUMBER(10) NOT NULL,
+    id_minuta   NUMBER(10) NOT NULL
+);
+
+ALTER TABLE detalle_minuta ADD CONSTRAINT detalle_minuta_pk PRIMARY KEY 
+(id_minuta );
+
+
+CREATE TABLE empleado (
+    id_empleado          NUMBER(10) NOT NULL,
+    rut_empleado         VARCHAR2(10) NOT NULL,
+    nombres_empleado     VARCHAR2(15) NOT NULL,
+    apellidos_empleado   VARCHAR2(20) NOT NULL,
+    telefono_empleado    VARCHAR2(12) NOT NULL,
+    estado_empleado      NUMBER(10) NOT NULL,
+    correo_empleado      VARCHAR2(20) NOT NULL,
+    perfil_empleado      NUMBER(10) NOT NULL,
+    id_usuario	 NUMBER(10) NOT NULL,
+    usuario_usuario      VARCHAR2(10) NOT NULL
+);
+
+CREATE UNIQUE INDEX empleado__idx ON
+    empleado ( id_usuario ASC );
+
+
+ALTER TABLE empleado ADD CONSTRAINT empleado_pk PRIMARY KEY ( id_empleado );
+
+CREATE TABLE empresa (
+    id_empresa          NUMBER(10) NOT NULL,
+    rut_empresa         VARCHAR2(10) NOT NULL,
+    nombre_empresa      VARCHAR2(15) NOT NULL,
+    direccion_empresa   VARCHAR2(20) NOT NULL,
+    giro_empresa        VARCHAR2(15) NOT NULL,
+    id_cliente          number(10) NOT NULL
+);
+
+ALTER TABLE empresa ADD CONSTRAINT empresa_pk PRIMARY KEY ( id_empresa );
+
+CREATE TABLE estado_habitacion (
+    id_estado                  NUMBER(10) NOT NULL,
+    estado                     NUMBER(10) NOT NULL,
+    id_habitacion   		VARCHAR2(5) NOT NULL
+);
+
+CREATE UNIQUE INDEX estado_habitacion__idx ON
+    estado_habitacion ( id_habitacion ASC );
+
+ALTER TABLE estado_habitacion ADD CONSTRAINT estado_habitacion_pk PRIMARY KEY ( 
+id_estado );
+
+CREATE TABLE factura (
+    id_factura   number(10) NOT NULL,
+    precio       NUMBER(10) NOT NULL
+);
+
+ALTER TABLE factura ADD CONSTRAINT factura_pk PRIMARY KEY ( id_factura );
+
+CREATE TABLE familia (
+    id_familia       NUMBER(10) NOT NULL,
+    nombre_familia   VARCHAR2(15) NOT NULL,
+    id_stock   number(10) NOT NULL
+);
+
+ALTER TABLE familia ADD CONSTRAINT familia_pk PRIMARY KEY ( id_familia );
+
+CREATE TABLE habitacion (
+    id_habitacion                 number(10) NOT NULL,
+    numero_habitacion             NUMBER(10) NOT NULL,
+    disponibilidad_habitacion     NUMBER(10) NOT NULL,
+    accesorios_habitacion         VARCHAR2(30),
+    id_tipo       		  number(10) NOT NULL,
+    id_orden      		  number(10) NOT NULL,
+    id_estado   		  NUMBER(10) NOT NULL
+);
+
+CREATE UNIQUE INDEX habitacion__idx ON
+    habitacion ( id_estado ASC );
+
+ALTER TABLE habitacion ADD CONSTRAINT habitacion_pk PRIMARY KEY ( id_habitacion 
+);
+
+CREATE TABLE huesped (
+    id_ficha        number(10) NOT NULL,
+    fecha_ingreso   DATE NOT NULL,
+    fecha_salida    DATE NOT NULL,
+    estado          CHAR(1) NOT NULL
+);
+
+ALTER TABLE huesped ADD CONSTRAINT huesped_pk PRIMARY KEY ( id_ficha );
+
+CREATE TABLE minuta (
+    id_minuta           NUMBER(10) NOT NULL,  
+    id_calendario       NUMBER(10) NOT NULL,
+    id_servicio         number(10) NOT NULL
+);
+
+CREATE UNIQUE INDEX minuta__idx ON
+    minuta ( id_calendario ASC );
+
+ALTER TABLE minuta ADD CONSTRAINT minuta_pk PRIMARY KEY ( id_minuta );
+
+CREATE TABLE orden_de_compra (
+    id_orden                    number(10) NOT NULL,
+    fecha_orden                    DATE NOT NULL,
+    id_factura          	number(10) NOT NULL,
+    detalle_orden                VARCHAR2(30) NOT NULL,
+    precio_orden                   NUMBER(10),
+    rut_trabajador   		VARCHAR2(10) NOT NULL
+);
+
+ALTER TABLE orden_de_compra ADD CONSTRAINT orden_de_compra_pk PRIMARY KEY ( 
+id_orden );
+
+CREATE TABLE orden_de_pedido (
+    id_orden           	number(10) NOT NULL,
+    detalle                  VARCHAR2(100) NOT NULL,
+    id_proveedor	     NUMBER(10) NOT NULL,
+    id_empleado     NUMBER(10) NOT NULL
+);
+
+ALTER TABLE orden_de_pedido ADD CONSTRAINT orden_de_pedido_pk PRIMARY KEY ( 
+id_orden );
+
+CREATE TABLE producto (
+    id_producto                       NUMBER(10) NOT NULL,
+    nombre_producto                   VARCHAR2(15) NOT NULL,
+    fecha_vencimiento                 DATE NOT NULL,
+    id_stock                    	number(10) NOT NULL,
+    id_detalle                        NUMBER(10) NOT NULL, 
+    id_minuta                         NUMBER(10) NOT NULL
+);
+
+ALTER TABLE producto ADD CONSTRAINT producto_pk PRIMARY KEY ( id_producto );
+
+CREATE TABLE proveedor (
+    id_proveedor          NUMBER(10) NOT NULL,
+    rut_proveedor         VARCHAR2(10) NOT NULL,
+    nombres_proveedor     VARCHAR2(15) NOT NULL,
+    apellidos_proveedor   VARCHAR2(15) NOT NULL,
+    telefono_proveedor    VARCHAR2(12) NOT NULL,
+    id_rubro        NUMBER(10) NOT NULL,
+    perfil_proovedor      NUMBER(10) NOT NULL
+);
+
+ALTER TABLE proveedor ADD CONSTRAINT proveedor_pk PRIMARY KEY ( id_proveedor );
+
+
+
+CREATE TABLE rubro (
+    id_rubro       NUMBER(10) NOT NULL,
+    nombre_rubro   VARCHAR2(15) NOT NULL
+);
+
+ALTER TABLE rubro ADD CONSTRAINT rubro_pk PRIMARY KEY ( id_rubro );
+
+CREATE TABLE stock (
+    id_stock       number(10) NOT NULL,
+    stock          NUMBER(10) NOT NULL,
+    codigo_barra   VARCHAR2(199) NOT NULL,
+    id_orden       NUMBER(10) NOT NULL,
+    id_proveedor number(10) NOT NULL
+);
+
+alter table stock
+add constraint id_orden_fk foreign key (id_orden)
+references orden_de_pedido (id_orden);
+
+ALTER TABLE stock ADD CONSTRAINT stock_pk PRIMARY KEY ( id_stock );
+
+CREATE TABLE tipo_habitacion (
+    id_tipo         number(10) NOT NULL,
+    cant_camas      NUMBER(10) NOT NULL,
+    precio          NUMBER(10) NOT NULL,
+    banio_privado   NUMBER(10) NOT NULL,
+    tipo_cama       VARCHAR2(15) NOT NULL
+);
+
+ALTER TABLE tipo_habitacion ADD CONSTRAINT tipo_habitacion_pk PRIMARY KEY ( 
+id_tipo );
+
+CREATE TABLE tipo_producto (
+    id_tipo          NUMBER(10) NOT NULL,
+    nombre_tipo      VARCHAR2(15) NOT NULL,
+    id_stock   number(10) NOT NULL
+);
+
+ALTER TABLE tipo_producto ADD CONSTRAINT tipo_producto_pk PRIMARY KEY ( id_tipo 
+);
+
+CREATE TABLE tipo_servicio (
+    id_servicio   number(10) NOT NULL,
+    descripcion   VARCHAR2(30) NOT NULL,
+    precio        NUMBER(10) NOT NULL
+);
+
+ALTER TABLE tipo_servicio ADD CONSTRAINT tipo_servicio_pk PRIMARY KEY ( 
+id_servicio );
+
+CREATE TABLE tipo_usuario (
+    id_tipo	      NUMBER(10) NOT NULL,
+    descripcion       VARCHAR2(15) NOT NULL
+);
+
+ALTER TABLE tipo_usuario ADD CONSTRAINT tipo_usuario_pk PRIMARY KEY( id_tipo
+);
+
+CREATE TABLE trabajador (
+    rut_trabajador        VARCHAR2(10) NOT NULL,
+    dv_trabajador         VARCHAR2(2),
+    nombre_trabajador     VARCHAR2(15) NOT NULL,
+    apellido_trabajador   VARCHAR2(15),
+    telefono              VARCHAR2(15) NOT NULL,
+    id_empresa    	  NUMBER(10) NOT NULL
+);
+
+ALTER TABLE trabajador ADD CONSTRAINT trabajador_pk PRIMARY KEY ( rut_trabajador 
+);
+
+CREATE TABLE usuario (
+    id_usuario                NUMBER(10) NOT NULL,
+    usuario                   VARCHAR2(10) NOT NULL,
+    contrasena                VARCHAR2(10) NOT NULL,
+    id_tipo		      number(10) not null
+);
+
+ALTER TABLE usuario ADD CONSTRAINT usuario_pk PRIMARY KEY ( id_usuario );
+
+ALTER TABLE empleado
+    ADD CONSTRAINT usuario_emleado_fk FOREIGN KEY ( id_usuario )
+        REFERENCES usuario ( id_usuario );
+
+ALTER TABLE cliente
+    ADD CONSTRAINT usuario_cliente_fk FOREIGN KEY ( id_usuario )
+        REFERENCES usuario ( id_usuario );
+
+ALTER TABLE usuario
+    ADD CONSTRAINT tipo_usuario_fk FOREIGN KEY ( id_tipo )
+        REFERENCES tipo_usuario ( id_tipo );
+
+
+ALTER TABLE comedor
+    ADD CONSTRAINT comedor_orden_de_compra_fk FOREIGN KEY (id_orden )
+        REFERENCES orden_de_compra ( id_orden );
+
+ALTER TABLE comedor
+    ADD CONSTRAINT comedor_tipo_servicio_fk FOREIGN KEY (id_servicio )
+        REFERENCES tipo_servicio ( id_servicio );
+
+ALTER TABLE detalle_minuta
+    ADD CONSTRAINT detalle_minuta_minuta_fk FOREIGN KEY ( id_minuta )
+        REFERENCES minuta ( id_minuta );
+
+ALTER TABLE familia
+    ADD CONSTRAINT familia_stock_fk FOREIGN KEY ( id_stock )
+        REFERENCES stock ( id_stock );
+
+ALTER TABLE habitacion
+    ADD CONSTRAINT habitacion_orden_de_compra_fk FOREIGN KEY (id_orden )
+        REFERENCES orden_de_compra ( id_orden );
+
+ALTER TABLE habitacion
+    ADD CONSTRAINT habitacion_tipo_habitacion_fk FOREIGN KEY (id_tipo )
+        REFERENCES tipo_habitacion ( id_tipo );
+
+ALTER TABLE minuta
+    ADD CONSTRAINT minuta_tipo_servicio_fk FOREIGN KEY ( id_servicio )
+        REFERENCES tipo_servicio ( id_servicio );
+
+ALTER TABLE orden_de_compra
+    ADD CONSTRAINT orden_de_compra_factura_fk FOREIGN KEY ( id_factura )
+        REFERENCES factura ( id_factura );
+
+ALTER TABLE orden_de_compra
+    ADD CONSTRAINT orden_de_compra_trabajador_fk FOREIGN KEY (rut_trabajador )
+        REFERENCES trabajador ( rut_trabajador );
+
+ALTER TABLE orden_de_pedido
+    ADD CONSTRAINT orden_de_pedido_empleado_fk FOREIGN KEY (id_empleado )
+        REFERENCES empleado ( id_empleado );
+
+
+ALTER TABLE EMPRESA
+
+    ADD CONSTRAINT id_cliente_fk FOREIGN KEY ( id_cliente )
+        REFERENCES CLIENTE ( id_cliente );
+
+
+ALTER TABLE producto
+    ADD CONSTRAINT producto_stock_fk FOREIGN KEY ( id_stock )
+        REFERENCES stock ( id_stock );
+ALTER TABLE proveedor
+    ADD CONSTRAINT proveedor_rubro_fk FOREIGN KEY ( id_rubro )
+        REFERENCES rubro ( id_rubro );
+ALTER TABLE tipo_producto
+    ADD CONSTRAINT tipo_producto_fk FOREIGN KEY ( id_stock )
+        REFERENCES stock  ( id_stock );
+alter table stock
+add constraint id_proveedor_fk foreign key (id_proveedor)
+references proveedor (id_proveedor);
+
+alter table trabajador
+add constraint id_empresa_fk foreign key (id_empresa)
+references empresa (id_empresa);
+
+alter table habitacion
+add constraint id_estado_fk foreign key (id_estado)
+references estado_habitacion (id_estado);
+
+alter table calendario_minuta
+add constraint id_calendario_fk foreign key (id_minuta)
+references minuta (id_minuta);
+
+commit;
